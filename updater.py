@@ -5,7 +5,6 @@ import logging
 import leancloud
 
 import config
-from man_tieba import ManTieba
 from owl_tweets import OwlTweet
 from util import *
 
@@ -31,9 +30,9 @@ def leancloud_object(name, data, id_key='id'):
 
 
 def update_data():
-    redcafe = OwlTweet()
+    old_tweet = OwlTweet()
     object_data = {
-        'Transfer': {'data': redcafe.new_items, 'id_key': 'id'},
+        'Transfer': {'data': old_tweet.new_items, 'id_key': 'id'},
     }
 
     for name, info in object_data.items():
