@@ -4,6 +4,7 @@ import os
 import uuid
 
 import mtranslate
+import requests
 
 from config import *
 
@@ -45,8 +46,10 @@ def data_changed(local_item, item):
 def upload_image(im, origin_url, name, default_url):
     try:
         print(origin_url)
-        uploaded_image = im.upload_image(url=origin_url, title=name)
-        return uploaded_image.link
+        uploaded_image = requests.post('https://sm.ms/api/upload', {},
+                                       files={'smfile':
+                                                  requests.get(origin_url).content}).json()
+        return uploaded_image['data']['url']
     except Exception as e:
         print(e)
         return default_url

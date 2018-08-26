@@ -25,10 +25,12 @@ def get_transfer_tweets(client)
     client.user_timeline(u).each do |tweet|
       tweet_data = (data[tweet.id.to_s] || {}).merge(tweet.attrs.with_indifferent_access)
       tweet_data['text'] = tweet.full_text
+      print tweet.full_text
       tweet_data['in_reply_to'] ||= client.status(tweet.in_reply_to_status_id).attrs rescue nil
       data[tweet.id.to_s] = tweet_data
     end
   end
+  transfer_data['tweets'] = data
   File.open('transfer.json', 'w') do |f|
     f.write(transfer_data.to_json)
   end
