@@ -24,11 +24,6 @@ def get_transfer_tweets(client)
   USERS.each do |u| 
     client.user_timeline(u).each do |tweet|
       tweet_data = (data[tweet.id.to_s] || {}).merge(tweet.attrs.with_indifferent_access)
-      comments = (tweet_data['comments'] || [])
-      comments.append(main_text)
-      tweet_data['comments'] = comments.uniq.compact
-      tweet_data['floor'] ||= post.css('.hashPermalink').text.gsub('#', '')
-      tweet_data['link'] ||= link
       tweet_data['text'] = tweet.full_text
       tweet_data['in_reply_to'] ||= client.status(tweet.in_reply_to_status_id).attrs rescue nil
       data[tweet.id.to_s] = tweet_data
