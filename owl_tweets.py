@@ -24,10 +24,10 @@ class OwlTweet:
         for tweet in self.origin_items['tweets'].values():
             item = {'user_name': tweet['user']['name'],
                     'id': tweet['id_str'], 'posted_at': parse(tweet['created_at']).timestamp(),
-                    'origin_text': tweet['full_text'], 'type': 'tweet'}
+                    'origin_text': tweet['text'], 'type': 'tweet'}
             item['text'] = self.items.get(item['id'], {}).get('text', None)
             if item['text'] is None:
-                item['text'] = translate(tweet['full_text']) + "\n\n" + tweet['full_text']
+                item['text'] = translate(tweet['text']) + "\n\n" + tweet['text']
             if tweet['in_reply_to'] is not None:
                 item['in_reply_to'] = {'id': tweet['in_reply_to']['id_str'],
                                        'origin_text': tweet['in_reply_to']['text'],
