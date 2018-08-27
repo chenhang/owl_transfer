@@ -8,8 +8,6 @@ class OwlTweet:
     file_path = 'transfer.json'
 
     def __init__(self):
-        self.im = pyimgur.Imgur(imgur_client_id,
-                                client_secret=imgur_client_secret)
         self.origin_items = load_json(self.file_path)
         if not os.path.exists("data"):
             os.makedirs("data")
