@@ -31,10 +31,10 @@ def leancloud_object(name, data, id_key='id'):
 
 
 def update_data():
-    old_tweet = OwlTweet()
+    # old_tweet = OwlTweet()
     nga = Nga()
     object_data = {
-        'Transfer': {'data': old_tweet.new_items + nga.new_items, 'id_key': 'id'},
+        'Transfer': {'data': [] + nga.new_items, 'id_key': 'id'},
     }
 
     for name, info in object_data.items():
