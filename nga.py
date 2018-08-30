@@ -18,13 +18,14 @@ class Nga():
         write_json('local_config/images.json', self.image_mapping)
 
     def url(self, page=1):
-        return "http://bbs.ngacn.cc/thread.php?fid=587"
+        return "http://bbs.ngacn.cc/thread.php?fid=587&page=" + str(page)
 
     def parse(self):
-        res = requests.get('http://bbs.ngacn.cc/thread.php?fid=587', headers=nga_headers, cookies=nga_cookies)
+        res = requests.get(self.url(1), headers=nga_headers, cookies=nga_cookies)
         html = BeautifulSoup(res.content, "lxml")
         for li in html.findAll('tr', {'class': 'topicrow'}):
             content_li = li.findAll('td')[1].find('a')
+            print(content_li.text)
             if 'href' not in content_li.attrs \
                     or ('转会' not in content_li.text and '交易' not in content_li.text):
                 continue
@@ -33,7 +34,7 @@ class Nga():
                     'link': 'http://bbs.ngacn.cc' + content_li.attrs['href'],
                     'id': 'nga-' + content_li.attrs['href'].split('tid=')[-1],
                     'text': content_li.text, 'origin_text': content_li.text,
-                    'comments': [], 'images': [], 'type': 'nga',
+                    'comments': [], 'images': [], 'type': 'nga', 'display': True,
                     'posted_at': int(li.findAll('td')[2].find('span').text)}
             # origin_avatar_url = li.find('.p_author_face > img', first=True).attrs.get('data-tb-lazyload', li.find(
             #     '.p_author_face > img', first=True).attrs['src'])
