@@ -3,32 +3,44 @@ from bs4 import BeautifulSoup
 from util import *
 
 
-class Nga():
+class Weibo():
     session = None
 
     def __init__(self):
         if not os.path.exists("data"):
             os.makedirs("data")
-        data = load_json('data/nga.json')
+        data = load_json('data/weibo.json')
         self.items = data.get('items', {})
         self.new_items = []
         self.image_mapping = load_json('local_config/images.json')
         self.parse()
-        write_json('data/nga.json', {'items': self.items, 'page': 1})
+        write_json('data/weibo.json', {'items': self.items, 'page': 1})
         write_json('local_config/images.json', self.image_mapping)
 
     def url(self, page=1):
         return "http://bbs.ngacn.cc/thread.php?fid=587&page=" + str(page)
 
     def parse(self):
-        res = requests.get(self.url(1), headers=nga_headers, cookies=nga_cookies)
-        html = BeautifulSoup(res.content, "lxml")
-        for li in html.findAll('tr', {'class': 'topicrow'}):
-            content_li = li.findAll('td')[1].find('a')
-            print(content_li.text)
-            if 'href' not in content_li.attrs \
-                    or not any(
-                [d in content_li.text for d in ['转会', '官宣', '交易', '宣布', '离队', '加入', '席位', '透露', '登场', '退役']]):
+        headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Referer': 'https://m.weibo.cn/p/index?extparam=OWL&containerid=100808c2b957d7481945468d28ac3d34f89b11',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
+            'MWeibo-Pwa': '1',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+        params = (
+            ('extparam', 'OWL'),
+            ('containerid', '100808c2b957d7481945468d28ac3d34f89b11_-_feed'),
+        )
+
+        res = requests.get('https://m.weibo.cn/api/container/getIndex', headers=headers, params=params)
+
+        # NB. Original query string below. It seems impossible to parse and
+        # reproduce query strings 100% accurately so the one below is given
+        # in case the reproduced version is not "correct".
+        # response = requests.get('https://m.weibo.cn/api/container/getIndex?extparam=OWL&containerid=100808c2b957d7481945468d28ac3d34f89b11_-_feed', headers=headers)
+        for li in res.json()['data']['cards']:
+            if 'card_group' not in li || not any( [d in content_li.text for d in ['转会', '官宣', '交易', '宣布', '离队', '加入', '席位', '透露', '登场', '退役']]):
                 continue
             # print(li.find('.tail-info')[-1].text)
             item = {'user_name': li.findAll('td')[2].find('a').text,
