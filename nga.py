@@ -28,7 +28,9 @@ class Nga():
             print(content_li.text)
             if 'href' not in content_li.attrs \
                     or not any(
-                [d in content_li.text for d in ['转会', '官宣', '交易', '宣布', '离队', '加入', '席位', '透露', '登场', '退役']]):
+                [d in content_li.text for d in ['转会', '官宣', '交易', '宣布', '离队', '加入', '席位', '透露',
+                                                '登场', '退役', '人员变动', '合同', '解约', '解除合约',
+                                                '合约']]):
                 continue
             # print(li.find('.tail-info')[-1].text)
             item = {'user_name': li.findAll('td')[2].find('a').text,

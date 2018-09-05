@@ -6,8 +6,8 @@ import leancloud
 
 import config
 from nga import Nga
-from owl_tweets import OwlTweet
 from util import *
+from weibo import Weibo
 
 logging.basicConfig(level=logging.ERROR)
 
@@ -33,8 +33,9 @@ def leancloud_object(name, data, id_key='id'):
 def update_data():
     # old_tweet = OwlTweet()
     nga = Nga()
+    weibo = Weibo()
     object_data = {
-        'Transfer': {'data': [] + nga.new_items, 'id_key': 'id'},
+        'Transfer': {'data': [] + weibo.new_items + nga.new_items, 'id_key': 'id'},
     }
 
     for name, info in object_data.items():
