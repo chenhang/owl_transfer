@@ -33,14 +33,15 @@ class Weibo():
             'Connection': 'keep-alive',
         }
 
-        res = requests.get('https://m.weibo.cn/feed/friends', headers=headers, cookies=weibo_cookies)
+        res = requests.get('https://m.weibo.cn/feed/friends',
+                           headers=headers, cookies=weibo_cookies)
 
         posts = res.json()['data']['statuses']
         for li in posts:
             print(li['text'])
             if not any([d in li['text'] for d in
                         ['转会', '官宣', '交易', '宣布', '离队', '加入', '席位', '透露',
-                         '登场', '退役', '人员变动', '合同', '解约', '解除合约', '合约']]):
+                         '登场', '退役', '人员变动', '合同', '解约', '解除合约', '合约', '爆料']]):
                 continue
             item = {'user_name': li['user']['screen_name'],
                     'link': "https://m.weibo.cn/status/" + li['id'],
