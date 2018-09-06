@@ -26,7 +26,6 @@ class Nga():
         html = BeautifulSoup(res.content, "lxml")
         for li in html.findAll('tr', {'class': 'topicrow'}):
             content_li = li.findAll('td')[1].find('a')
-            print(content_li.text)
             if 'href' not in content_li.attrs \
                     or not any(
                         [d in content_li.text for d in ['转会', '官宣', '交易', '宣布', '离队', '加入', '席位', '透露',
